@@ -6,7 +6,6 @@ const getAnimals = async () => {
     return allAnimals;
 }
 
-
 const AnimalList = async () => {
     const animals = await getAnimals()
 
@@ -16,7 +15,7 @@ const AnimalList = async () => {
             
             <ul>
                 {animals.map(animal => (
-                    <Animal animal={animal} />
+                    <Animal key={animal.id} animal={animal} />
                 ))}
             </ul>
         </main>

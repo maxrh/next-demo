@@ -15,19 +15,23 @@ export default function Animal ({ animal }) {
     const handleChange = async () => {
         setIsFetching(true);
 
-        fetch("/animals", {
+        const updatedAnimal = { ...animal, adopted: !animal.adopted };
+
+        console.log(updatedAnimal);
+        
+        fetch(`/animals/api/${animal.id}`, {
             method: "PUT",
-            body: JSON.stringify(animal),
-        })
-
-        setTimeout(() => {
-            console.log("You clicked!")
-        }, 1000);
-
-        setIsFetching(false);
-        startTransition(() => {
-            router.refresh();
+            body: JSON.stringify(updatedAnimal),
+        }).then(() => {
+            setIsFetching(false);
+            startTransition(() => {
+                router.refresh();
+            });
+        }).catch((error) => {
+            console.error(error);
+            setIsFetching(false);
         });
+        
     }
 
     return (
@@ -39,7 +43,7 @@ export default function Animal ({ animal }) {
                 name={animal.name}
                 id={animal.name}
                 checked={animal.adopted}
-                onChange={handleChange}
+                onChange={() => handleChange()}
             />
             <p></p>
         </li>

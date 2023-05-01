@@ -1,17 +1,24 @@
 import { prisma } from '@/db';
 
-export async function PUT(request, response) {
-    const animal = await request.json();
+export async function PUT(req, res) {
+    const { id } = req.query;
 
-    const updatedAnimal = await prisma.animal.update({
-        where: {
-            _id: animal.id
-        },
-        data: {
-            adopted: !animal.adopted
-        }
+    console.log(req.query);
+    const animal = await prisma.animal.findUnique({
+        where: { id },
     });
 
-    return response.json({updatedAnimal});
+    if (!animal) {
+        return res.status(404).json({ message: 'Animal not found' });
+    }
+
+    const updatedAnimal = await prisma.animal.update({
+        where: { id },
+        data: { adopted: !animal.adopted }
+    });
+
+    console.log(updatedAnimal);
+
+    return response.json({ updatedAnimal });
 
 }
